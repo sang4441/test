@@ -1,11 +1,11 @@
 // Filename: models/project
 define([
-  'underscore',
+  'handlebars',
   'backbone'
-], function(_, Backbone){
+], function(Handlebars, Backbone){
   var workListModel = Backbone.Model.extend({
     defaults: {
-      name: "Harry Potter"
+      title: "To do List"
     }
   });
   // Return the model for the module
