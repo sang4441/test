@@ -7,7 +7,6 @@ define([
 
 
   var initialize = function(){
-    console.log(Backbone);
     var workListView = new WorkListView();
     workListView.render();
   }

@@ -7,10 +7,14 @@
     <!-- Bootstrap -->
     <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="/css/style.css" rel="stylesheet" media="screen">
-    <script data-main="js/main" src="js/libs/require/require.js"></script>
-<style type="text/css">
-#div1 {width:350px;height:70px;padding:10px;border:1px solid #aaaaaa;}
-</style>
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+    <script data-main="js/main" src="js/libs/require/require.js"></script>    
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="js/libs/bootstrap/bootstrap.min.js"></script>
+    <style type="text/css">
+    #div1 {width:350px;height:70px;padding:10px;border:1px solid #aaaaaa;}
+    </style>
 <script>
 function allowDrop(ev)
 {
@@ -105,11 +109,20 @@ ev.target.appendChild(document.getElementById(data));
       <div id="container" class="row-fluid"></div>
     </div>
 
+    <div id="add-work-list" style="display:none;">
+       Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore 
+   </div>
 
 
 
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="js/libs/bootstrap/bootstrap.min.js"></script>
+    <script>
+
+      // $('#add-list').click(function() {
+      //   console.log('hit');
+      //   // var workListView = new WorkListView();
+      //   // workListView.addList();
+      // });
+    </script>
   </body>
 </html>
 

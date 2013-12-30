@@ -1,9 +1,11 @@
  <!-- <div class="row-fluid"> -->
-        <div class="span6 content">
+        <div class="span{{size}} content">
           <div style="text-align:center">    
             <h3>{{title}}</h2>
-            <div class="list" ondrop="drop(event)" ondragover="allowDrop(event)">
-              
+            <!-- <button id="test"> -->
+            <div id="work-div" class="list" ondrop="drop(event)" ondragover="allowDrop(event)">
+            	<button id="work-add" text="click"></button>
+              <div id="work-item-list"></div> 
             </div>  
           </div>
         </div>
