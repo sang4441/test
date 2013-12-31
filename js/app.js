@@ -2,16 +2,19 @@ define([
   'jquery',
   'underscore',
   'backbone',
+  'router',
   'views/workList/workView',
-], function($, _, Backbone, WorkListView){
+], function($, _, Backbone, Router, WorkListView){
 
 
   var initialize = function(){
-    var workListView = new WorkListView();
-    workListView.render();
+    console.log("here");
+    Router.initialize();
+    // var workListView = new WorkListView();
+    // workListView.render();
   }
 
-  Backbone.history.start();
+  // Backbone.history.start();
   return {
     initialize: initialize
   };
