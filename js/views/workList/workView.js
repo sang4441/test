@@ -38,16 +38,26 @@ define([
     },
 
     initialize: function() {
-      
+      var self = this;
       this.work_list = new WorkCollection();
-      this.work_list.on('add', this.render, this);
-      
-      this.work = new WorkModel();
-      this.work.set({'title':'To do List', 'first' : true});
-      this.work_list.add(this.work);
-      this.work = new WorkModel();
-      this.work.set({'title':'Finished', 'first' : false});
-      this.work_list.add(this.work);
+      // this.work_list.on('add', this.render, this);
+     
+      this.work_list.url = '/get_division'; 
+      this.work_list.fetch({
+        success: function() {
+          console.log("collection fetch succeeded");
+          self.render();
+        },
+        error: function() {
+          console.log("collection fetch error");
+        }
+      });
+      // this.work = new WorkModel();
+      // this.work.set({'title':'To do List', 'first' : true});
+      // this.work_list.add(this.work);
+      // this.work = new WorkModel();
+      // this.work.set({'title':'Finished', 'first' : false});
+      // this.work_list.add(this.work);
     },
 
     render: function(){
@@ -55,16 +65,31 @@ define([
       self.size = this.work_list.size();
       
       this.$el.empty();
-
+      console.log(this.work_list);
       this.work_list.each(function(work) {
+
         var template = Handlebars.compile(WorkListTemplate);
         // work.set("size", (12 / self.size));
 
         work.set("size", 6);
-        var html = template(work.attributes); 
-        self.$el.append(html);
+        work.set("first", true);
+        self.work_item_list = new WorkItemCollection();
+        self.work_item_list.url = '/get_work/' + work.get('id');
+        self.work_item_list.fetch({
+          success: function(data) {
+            console.log("collection fetch succeeded");
+            work.set('work_list', data);
+            var html = template(work.attributes); 
+            self.$el.append(html);
+            new workItemView().add_work_list(data);
+
+          },
+          error: function() {
+            console.log("collection fetch error");
+          }
+        });
+        
       });
-      this.workItemView = new workItemView();
       return this;      
     },
 
@@ -80,23 +105,27 @@ define([
     },
 
     enterWork:function(e) {
+      var self = this;
       if (e.which == 13) {
         var itemName = $('#work-input').val();
         $('#work-input').remove();
         var itemModel = new WorkItemModel({
-          name : itemName
+          name : itemName,
+          division_id : 11
         });
-        itemModel.urlRoot ='/test';
+        itemModel.urlRoot ='/save_work';
         itemModel.save(null, {
           success: function(res, xhr) {
             console.log("success");
+            self.render();
           },
           error: function(model, xhr, options) {
             console.log("error");
           }
         });
-
-        this.workItemView.addWorkItem(itemModel);  
+        // console.log(this.work_item_list);
+        // this.work_item_list.add(itemModel);
+        // new workItemView().addWorkItem(this.work_item_list);  
       }
     }
 
@@ -107,27 +136,21 @@ define([
     el: $('#work-item-list'),
 
     initialize: function() {
+      console.log();
       var self = this;
-      self.work_item_list = new WorkItemCollection();
-      self.work_item_list.url = '/get_work';
-      self.work_item_list.fetch({
-        success: function() {
-          console.log("collection fetch succeeded");
-          self.render();
-        },
-        error: function() {
-          console.log("collection fetch error");
-        }
-      });
+      // this.render();
     },
 
     render: function() {
-      console.log('render');
+      console.log("render work_list");
 
       var self = this;
-      self.setElement($('#work-item-list'));
       self.$el.empty();
       this.work_item_list.each(function(work_item) {
+        var division_id = work_item.get('division_id')
+        // console.log(work_item);
+        self.setElement($('#work-item-list-' + division_id));
+        
         var template = Handlebars.compile(WorkItemTemplate);
         var html = template(work_item.attributes); 
         self.$el.append(html);
@@ -135,8 +158,14 @@ define([
       return this;
     },
 
+    add_work_list: function(data) {
+      this.work_item_list = data;
+      this.render();
+    },
+
     addWorkItem: function(model) {
-      this.work_item_list.add(model);
+      console.log(model);
+      this.work_item_list = model;
       this.render();
     }
   })
