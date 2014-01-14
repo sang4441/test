@@ -20,3 +20,11 @@ hr {
 .list {
 	float:left;
 }
+.work-div{
+  height: 500px;
+  /*border: solid;*/
+}
+#work-add {
+  /*background: url('../../img/plus.png');*/
+  height: 10px;
+}

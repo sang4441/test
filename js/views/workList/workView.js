@@ -23,16 +23,7 @@ define([
       this.workListView = new workListView;
     },
 
-    render: function() {
-      this.workListView.render();
-    },
-
     addList: function() {
-      // $('#add-work-list').dialog({
-      //   modal:true,
-        
-      // });
-
       this.workListView.addList();
     }
 
@@ -42,49 +33,49 @@ define([
     el: $('#container'),
 
     events: {
-      "click #work-add"   :   "addWork",
+      "click #work-add"   :   'addWork',
       'keyup #work-input'  :   'enterWork'
     },
 
     initialize: function() {
-      console.log("init");
       
       this.work_list = new WorkCollection();
       this.work_list.on('add', this.render, this);
+      
       this.work = new WorkModel();
-      this.work.set('title', 'To do List');
+      this.work.set({'title':'To do List', 'first' : true});
       this.work_list.add(this.work);
-      console.log(this.work);
-
-      // this.work_item = new 
-      // this.render();
-      // this.collection.bind("add", this.render, this);
+      this.work = new WorkModel();
+      this.work.set({'title':'Finished', 'first' : false});
+      this.work_list.add(this.work);
     },
 
     render: function(){
       var self = this;
       self.size = this.work_list.size();
+      
       this.$el.empty();
+
       this.work_list.each(function(work) {
         var template = Handlebars.compile(WorkListTemplate);
-        work.set("size", (12 / self.size));
+        // work.set("size", (12 / self.size));
+
+        work.set("size", 6);
         var html = template(work.attributes); 
-        console.log(work);         
         self.$el.append(html);
       });
       this.workItemView = new workItemView();
-      return this;
-      
+      return this;      
     },
 
     addList: function() {
       console.log("add list");
-      this.work_list.add(new WorkModel().set('title', 'finished'));
-      this.render();
+      // this.work_list.add(new WorkModel().set('title', 'finished'));
+      // this.render();
     },
 
     addWork: function() {
-      $('#work-div').append('<input id="work-input" type="text">');
+      $('.work-div').append('<input id="work-input" type="text">');
       $('#work-input').focus();
     },
 
@@ -92,8 +83,19 @@ define([
       if (e.which == 13) {
         var itemName = $('#work-input').val();
         $('#work-input').remove();
-        var itemModel = new WorkItemModel();
-        itemModel.set('name', itemName);
+        var itemModel = new WorkItemModel({
+          name : itemName
+        });
+        itemModel.urlRoot ='/test';
+        itemModel.save(null, {
+          success: function(res, xhr) {
+            console.log("success");
+          },
+          error: function(model, xhr, options) {
+            console.log("error");
+          }
+        });
+
         this.workItemView.addWorkItem(itemModel);  
       }
     }
@@ -105,10 +107,23 @@ define([
     el: $('#work-item-list'),
 
     initialize: function() {
-      this.work_item_list = new WorkItemCollection();
+      var self = this;
+      self.work_item_list = new WorkItemCollection();
+      self.work_item_list.url = '/get_work';
+      self.work_item_list.fetch({
+        success: function() {
+          console.log("collection fetch succeeded");
+          self.render();
+        },
+        error: function() {
+          console.log("collection fetch error");
+        }
+      });
     },
 
     render: function() {
+      console.log('render');
+
       var self = this;
       self.setElement($('#work-item-list'));
       self.$el.empty();

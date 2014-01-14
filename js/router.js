@@ -13,7 +13,7 @@ define([
 
     index: function() {
       var workListView = new WorkListView();
-      workListView.render();    }
+    }
   });
 
   var initialize = function(){

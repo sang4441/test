@@ -11,5 +11,4 @@ connection.connect(function(err) {
 		console.log(err);
 	}
 	console.log("success");
-  // connected! (unless `err` is set)
 });
